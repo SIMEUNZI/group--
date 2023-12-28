@@ -5,19 +5,17 @@ const router = express.Router();
 const sellDAO = require('./../models/sellDAO'); 
 
 
-
-// 판매 정보 조회 
-router.get('/checkSells', (req, res, next) => {
-  const body = req.body;
-
-  sellDAO.getSellById(body, (resp) => {
+router.get('/checkSell/:sell_id', async (req, res, next) => {
+  try {
+    const { sellId } = req.params;
+    const resp = await sellDAO.getSellById(sellId);
     res.json(resp);
-  })
-
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// 판매 정보 추가 
-router.post('/addSells', async (req, res) => {
+router.post('/addSell', async (req, res) => {
   try {
     const sellData = req.body;
     await sellDAO.insertSell(sellData);
@@ -27,10 +25,9 @@ router.post('/addSells', async (req, res) => {
   }
 });
 
-// 판매 정보 수정 
-router.put('/updateSells', async (req, res) => {
+router.put('/updateSell/:sell_id', async (req, res) => {
   try {
-    const sellId = req.params.id;
+    const { sellId } = req.params;
     const sellData = req.body;
     await sellDAO.updateSell(sellId, sellData);
     res.json({ message: 'Sell updated successfully!' });
@@ -39,10 +36,9 @@ router.put('/updateSells', async (req, res) => {
   }
 });
 
-// 판매 정보 삭제 
-router.delete('/deleteSells', async (req, res) => {
+router.delete('/deleteSell/:sell_id', async (req, res) => {
   try {
-    const sellId = req.params.id;
+    const { sellId } = req.params;
     await sellDAO.deleteSell(sellId);
     res.json({ message: 'Sell deleted successfully!' });
   } catch (error) {
@@ -51,3 +47,5 @@ router.delete('/deleteSells', async (req, res) => {
 });
 
 module.exports = router;
+
+
