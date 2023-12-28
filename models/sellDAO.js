@@ -20,13 +20,11 @@ const sellDAO = {
     }
   },
 
-  getAllSells: async (item) => {
-    const no = Number(item.no) - 1 || 0;
-    const size = Number(item.size) || 10;
 
+  getAllSells: async () => {
     try {
       const conn = await pool.getConnection();
-      const [resp] = await conn.query(sql.getAll, [no * size, size]);
+      const [resp] = await conn.query(sql.getAll);
       conn.release();
       return { status: 200, message: 'OK', data: resp };
     } catch (error) {
